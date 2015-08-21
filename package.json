@@ -4,7 +4,7 @@
   "description": "JS-Template",
   "main": "index.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "mocha --recursive"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
   "homepage": "https://github.com/missingdays/just",
   "dependencies": {
     "ed3-logger": "^1.0.2",
+    "expect.js": "^0.3.1",
     "flags": "^0.1.3"
   }
 }
