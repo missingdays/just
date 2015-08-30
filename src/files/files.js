@@ -66,16 +66,14 @@ files._changeDir = function(file, options){
         if(subs == from[i]){
             splt[i] = to[i];
         } else {
-            throw new Error("Can't convert " + path + " with given prefix " + from);
+            throw new Error("Can't convert " + file + " with given prefix " + from);
         }
     }
 
     return path.normalize(splt.join("/"));
 }
 
-files.parse = function(fileName){
-
-    fs.mkdir("lib", function(err){});
+files.parse = function(fileName, to){
 
     fs.stat(fileName, function(err, file){
         if(file.isFile()){
@@ -83,7 +81,7 @@ files.parse = function(fileName){
             files._parseFile(fileName, function(parsedFile){
 
                 fileName = files._changeExtension(fileName);
-//                fileName = changeDistDirectory(fileName);
+                fileName = files._changeDir(fileName);
 
                 fs.writeFile(fileName, parsedFile, function(err){
                     if(err){
@@ -93,9 +91,9 @@ files.parse = function(fileName){
                 });
             });
         } else {
-            fs.readdir(fileName, function(err, files){
-                files.forEach(function(file){
-                    parseAny(fileName + "/" + file);
+            fs.readdir(fileName, function(err, dirs){
+                dirs.forEach(function(file){
+                    files.parse(fileName + "/" + file);
                 });
             });
         }
