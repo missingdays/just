@@ -1,2 +1,0 @@
-fun hello():
-    print("hello")

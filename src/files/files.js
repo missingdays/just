@@ -83,14 +83,24 @@ files.parse = function(fileName){
             files._parseFile(fileName, function(parsedFile){
 
                 fileName = files._changeExtension(fileName);
+//                fileName = changeDistDirectory(fileName);
 
                 fs.writeFile(fileName, parsedFile, function(err){
-                    if(err)
+                    if(err){
                         logger.log(err);
+                    }
+
+                });
+            });
+        } else {
+            fs.readdir(fileName, function(err, files){
+                files.forEach(function(file){
+                    parseAny(fileName + "/" + file);
                 });
             });
         }
     });
+
 }
 
 module.exports = files;
