@@ -1,5 +1,5 @@
-var jsp = require("./parse-js"),
-    pro = require("./process"),
+var jsp = require("../parser/js"),
+    pro = require("./tojs"),
     slice = jsp.slice,
     member = jsp.member,
     curry = jsp.curry,

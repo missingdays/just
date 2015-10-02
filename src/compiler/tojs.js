@@ -42,7 +42,7 @@
     SUCH DAMAGE.
  ***********************************************************************/
 
-var jsp = require("./parse-js"),
+var jsp = require("../parser/js"),
     curry = jsp.curry,
     slice = jsp.slice,
     member = jsp.member,
