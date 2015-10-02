@@ -1,2 +1,3 @@
-fun hello():
-    print("hello")
+function hello() {
+    alert("hello");
+}

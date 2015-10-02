@@ -2,14 +2,15 @@ var fs = require("fs");
 var path = require("path");
 var logger = require("ed3-logger");
 
-var parser = require("../parser/parser.js");
+var jstp = require("../parser/jst");
+var tojs = require("../compiler/tojs");
 
 var files = {};
 
 files._parseFile = function(fileName, callback){
     fs.readFile(fileName, { encoding: 'utf8' }, function(err, data){
 
-        var parsedFile = parser.parse(data);
+        var parsedFile = jstp.parse(data);
 
         if(callback){
             callback(parsedFile);
@@ -83,7 +84,9 @@ files.parse = function(fileName, to){
                 fileName = files._changeExtension(fileName);
                 fileName = files._changeDir(fileName);
 
-                fs.writeFile(fileName, parsedFile, function(err){
+                var code = tojs.gen_code(parsedFile, { beautify: true });
+
+                fs.writeFile(fileName, code, function(err){
                     if(err){
                         logger.log(err);
                     }
