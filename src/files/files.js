@@ -1,22 +1,54 @@
 var fs = require("fs");
 var path = require("path");
 var logger = require("ed3-logger");
+var glob = require("glob");
+var mkdirp = require("mkdirp");
+
+var esprima = require("esprima");
+var escodegen = require("escodegen");
 
 var jstp = require("../parser/jst");
 var tojs = require("../compiler/tojs");
 
 var files = {};
 
-files._parseFile = function(fileName, callback){
-    fs.readFile(fileName, { encoding: 'utf8' }, function(err, data){
+files.process = function(from, to){
 
-        var parsedFile = jstp.parse(data);
+    glob("**/*.jst", function(err, f){
+        f.forEach(function(file){
+            var newName = files._changeExtension(file);
+            newName = files._changeDir(newName, { from: from, to: to });
 
-        if(callback){
-            callback(parsedFile);
-        }
+            files.mkdirFor(newName);
+
+            file = path.resolve(file);
+            files.convertFile(file, function(converted){
+                fs.writeFile(newName, converted, function(err){
+                    if(err) logger.log(err);
+                });
+            });
+        });
     });
-}
+};
+
+files.convert = function(code){
+    var ast = esprima.parse(code);
+    var code = escodegen.generate(ast);
+    return code;
+};
+
+files.convertFile = function(file, callback){
+    fs.readFile(file, "utf-8", function(err, code){
+        callback(files.convert(code));
+    });
+};
+
+files.mkdirFor = function(file){
+    var tmp = file.split("/");
+    tmp.pop();
+    var dir = tmp.join("/");
+    mkdirp(dir);
+};
 
 files._changeExtension = function(fileName){
     var arr = fileName.split(".");
@@ -72,36 +104,6 @@ files._changeDir = function(file, options){
     }
 
     return path.normalize(splt.join("/"));
-}
-
-files.parse = function(fileName, to){
-
-    fs.stat(fileName, function(err, file){
-        if(file.isFile()){
-
-            files._parseFile(fileName, function(parsedFile){
-
-                fileName = files._changeExtension(fileName);
-                fileName = files._changeDir(fileName);
-
-                var code = tojs.gen_code(parsedFile, { beautify: true });
-
-                fs.writeFile(fileName, code, function(err){
-                    if(err){
-                        logger.log(err);
-                    }
-
-                });
-            });
-        } else {
-            fs.readdir(fileName, function(err, dirs){
-                dirs.forEach(function(file){
-                    files.parse(fileName + "/" + file);
-                });
-            });
-        }
-    });
-
-}
+};
 
 module.exports = files;

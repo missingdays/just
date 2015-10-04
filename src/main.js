@@ -3,4 +3,4 @@ var files = require("./files/files.js");
 
 var args = process.argv;
 
-files.parse(args[2], args[3]);
+files.process(args[2], args[3]);
