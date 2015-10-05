@@ -367,7 +367,7 @@
             return (id === 'if') || (id === 'in') || (id === 'do');
         case 3:
             return (id === 'var') || (id === 'for') || (id === 'new') ||
-                (id === 'try') || (id === 'let');
+                (id === 'try') || (id === 'let') || (id === 'def');
         case 4:
             return (id === 'this') || (id === 'else') || (id === 'case') ||
                 (id === 'void') || (id === 'with') || (id === 'enum');
@@ -381,7 +381,7 @@
         case 7:
             return (id === 'default') || (id === 'finally') || (id === 'extends');
         case 8:
-            return (id === 'function') || (id === 'continue') || (id === 'debugger');
+            return  (id === 'continue') || (id === 'debugger');
         case 10:
             return (id === 'instanceof');
         default:
@@ -3242,7 +3242,7 @@
                 return parseNonComputedProperty();
             }
             isAssignmentTarget = isBindingElement = false;
-            if (matchKeyword('function')) {
+            if (matchKeyword('def')) {
                 return parseFunctionExpression();
             }
             if (matchKeyword('this')) {
@@ -3948,7 +3948,7 @@
             case 'const':
             case 'let':
                 return parseLexicalDeclaration({inFor: false});
-            case 'function':
+            case 'def':
                 return parseFunctionDeclaration(new Node());
             case 'class':
                 return parseClassDeclaration();
@@ -4692,7 +4692,7 @@
                 return parseDoWhileStatement(node);
             case 'for':
                 return parseForStatement(node);
-            case 'function':
+            case 'def':
                 return parseFunctionDeclaration(node);
             case 'if':
                 return parseIfStatement(node);
@@ -4899,7 +4899,7 @@
 
         previousAllowYield = state.allowYield;
 
-        expectKeyword('function');
+        expectKeyword('def');
 
         isGenerator = match('*');
         if (isGenerator) {
@@ -4957,7 +4957,7 @@
 
         previousAllowYield = state.allowYield;
 
-        expectKeyword('function');
+        expectKeyword('def');
 
         isGenerator = match('*');
         if (isGenerator) {
@@ -5158,7 +5158,7 @@
                 case 'const':
                 case 'var':
                 case 'class':
-                case 'function':
+                case 'def':
                     declaration = parseStatementListItem();
                     return node.finishExportNamedDeclaration(declaration, specifiers, null);
             }
@@ -5205,7 +5205,7 @@
         // export default ...
         expectKeyword('default');
 
-        if (matchKeyword('function')) {
+        if (matchKeyword('def')) {
             // covers:
             // export default function foo () {}
             // export default function () {}
