@@ -29,8 +29,12 @@ files.process = function(from, to){
 };
 
 files.convert = function(code){
-    var ast = jstp.parse(code);
-    var code = tojs.generate(ast);
+    var ast = jstp.parse(code, {
+        attachComment: true
+    });
+    var code = tojs.generate(ast, {
+        comment: true
+    });
     return code;
 };
 
