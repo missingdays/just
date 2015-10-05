@@ -1,5 +1,5 @@
 var escodegen = require("escodegen");
 
-module.exports.gen = function(ast){
+module.exports.generate = function(ast){
     return escodegen.generate(ast);
 }

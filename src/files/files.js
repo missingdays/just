@@ -4,11 +4,8 @@ var logger = require("ed3-logger");
 var glob = require("glob");
 var mkdirp = require("mkdirp");
 
-var esprima = require("esprima");
-var escodegen = require("escodegen");
-
-var jstp = require("../parser/jst");
-var tojs = require("../compiler/tojs");
+var jstp = require("../parser/jst/index");
+var tojs = require("../compiler/tojs/index");
 
 var files = {};
 
@@ -32,8 +29,8 @@ files.process = function(from, to){
 };
 
 files.convert = function(code){
-    var ast = esprima.parse(code);
-    var code = escodegen.generate(ast);
+    var ast = jstp.parse(code);
+    var code = tojs.generate(ast);
     return code;
 };
 
